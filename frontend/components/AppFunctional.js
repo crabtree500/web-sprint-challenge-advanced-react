@@ -102,6 +102,7 @@ export default function AppFunctional(props) {
             }
           })
           .then(data => {
+           
             setMessage(data.message);
             console.log('Payload sent successfully:', payload);
           })
@@ -110,8 +111,11 @@ export default function AppFunctional(props) {
           });
       })
       .catch(validationError => {
-        // If validation fails, show custom alert for email validation error
-        if (validationError.inner.some(err => err.path === 'email')) {
+        // If validation fails, show custom alert for email validation
+        if (validationError.response && validationError.response.status === 403) {
+          // If the server responded with 403
+          setMessage(`foo@bar.baz failure ${validationError.response.data.code}`);  
+        } else if (validationError.inner.some(err => err.path === 'email')) {
           alert(validationError.inner.find(err => err.path === 'email').message); // Display the validation error message for email
         } else {
           alert('Validation error: ' + validationError.message); // Display a generic validation error message
