@@ -74,6 +74,9 @@ export default function AppFunctional(props) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       alert('Ouch: email is required');
+      if (email.length > 100 ) {
+        alert('Ouch: email must be under 100 chars')
+      }
       return;
     }
   
@@ -106,6 +109,7 @@ export default function AppFunctional(props) {
   // Handle successful response data
   setMessage(data.message);
   console.log('Payload sent successfully:', payload);
+  reset()
 })
 .catch(error => {
   // Handle fetch errors
@@ -117,7 +121,7 @@ export default function AppFunctional(props) {
     <div id="wrapper" className={props.className}>
       <div className="info">
         <h3 id="coordinates">{getXYMessage()}</h3>
-        <h3 id="steps">You moved {steps} {steps === 1 ? 'time' : 'times'} </h3>
+        <h3 id="steps">You moved {steps} {steps === 1 ? 'time' : 'times'}</h3>
       </div>
       <div id="grid">
         {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
