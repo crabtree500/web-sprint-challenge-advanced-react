@@ -78,10 +78,9 @@ export default function AppFunctional(props) {
   function onSubmit(evt) {
     evt.preventDefault();
   
-    // Validate the email field
     schema.validate({ email })
       .then(() => {
-        // If validation passes, proceed with form submission
+        
   
         const x = index % 3 + 1;
         const y = Math.floor(index / 3) + 1;
@@ -113,12 +112,11 @@ export default function AppFunctional(props) {
       .catch(validationError => {
         // If validation fails, show custom alert for email validation
         if (validationError.response && validationError.response.status === 403) {
-          // If the server responded with 403
           setMessage(`foo@bar.baz failure ${validationError.response.data.code}`);  
         } else if (validationError.inner.some(err => err.path === 'email')) {
-          alert(validationError.inner.find(err => err.path === 'email').message); // Display the validation error message for email
+          setMessage(validationError.inner.find(err => err.path === 'email').message); // Display the validation error message for email
         } else {
-          alert('Validation error: ' + validationError.message); // Display a generic validation error message
+          setMessage(validationError.message); // Display a generic validation error message
         }
       });
   }
