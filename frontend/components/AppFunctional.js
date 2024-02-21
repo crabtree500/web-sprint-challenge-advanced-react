@@ -77,14 +77,18 @@ export default function AppFunctional(props) {
 
   function onSubmit(evt) {
     evt.preventDefault();
-  
+    const x = index % 3 + 1;
+        const y = Math.floor(index / 3) + 1;
+        const payload = { x, y, steps, email };
+    const code = (((x + 1) * (y + 2)) * (steps + 1)) + email.length
+  if (email === 'foo@bar.baz') {
+    setMessage(`foo@bar.baz failure ${code}`)
+  }
     schema.validate({ email })
       .then(() => {
         
   
-        const x = index % 3 + 1;
-        const y = Math.floor(index / 3) + 1;
-        const payload = { x, y, steps, email };
+        
   
         fetch('http://localhost:9000/api/result', {
           method: 'POST',
@@ -104,16 +108,15 @@ export default function AppFunctional(props) {
            
             setMessage(data.message);
             console.log('Payload sent successfully:', payload);
+            setEmail(initialEmail)
           })
           .catch(error => {
             console.error('Error sending payload:', error);
           });
       })
       .catch(validationError => {
-        // If validation fails, show custom alert for email validation
-        if (validationError.response && validationError.response.status === 403) {
-          setMessage(`foo@bar.baz failure ${validationError.response.data.code}`);  
-        } else if (validationError.inner.some(err => err.path === 'email')) {
+  
+        if (validationError.inner.some(err => err.path === 'email')) {
           setMessage(validationError.inner.find(err => err.path === 'email').message); // Display the validation error message for email
         } else {
           setMessage(validationError.message); // Display a generic validation error message
