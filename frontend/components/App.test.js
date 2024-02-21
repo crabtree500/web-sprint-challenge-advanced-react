@@ -1,4 +1,4 @@
-import server from './backend/mock-server'
+import server from '../backend/mock-server'
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import user from '@testing-library/user-event' // Importing user-event library
