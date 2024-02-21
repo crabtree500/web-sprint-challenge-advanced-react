@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
+import * as yup from 'yup';
+
+const schema = yup.object().shape({
+  email: yup
+    .string()
+    .trim()
+    .email('Ouch: email must be a valid email')
+    .required('Ouch: email is required')
+    .max(100, 'Ouch: email must be under 100 chars'), 
+})
+
 const initialMessage = '';
 const initialEmail = '';
 const initialSteps = 0;
 const initialIndex = 4;
+
 
 export default function AppFunctional(props) {
   const [message, setMessage] = useState(initialMessage);
@@ -65,58 +77,48 @@ export default function AppFunctional(props) {
 
   function onSubmit(evt) {
     evt.preventDefault();
-    
-    // Calculate the x and y coordinates based on the current index
-    const x = index % 3 + 1;
-    const y = Math.floor(index / 3) + 1; 
-    
-    // Validate the email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert('Ouch: email is required');
-      if (email.length > 100 ) {
-        alert('Ouch: email must be under 100 chars')
-      }
-      return;
-    }
   
-    // Prepare the payload
-    const payload = {
-      x: x,
-      y: y,
-      steps: steps,
-      email: email
-    };
+    // Validate the email field
+    schema.validate({ email })
+      .then(() => {
+        // If validation passes, proceed with form submission
   
-    // Send the payload to the server
-    fetch('http://localhost:9000/api/result', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(payload)
-})
-.then(response => {
-  if (response.ok) {
-    // Handle success
-    return response.json(); // Parse response body as JSON
-  } else {
-    // Handle errors
-    throw new Error(response.statusText);
+        const x = index % 3 + 1;
+        const y = Math.floor(index / 3) + 1;
+        const payload = { x, y, steps, email };
+  
+        fetch('http://localhost:9000/api/result', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        })
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error(response.statusText);
+            }
+          })
+          .then(data => {
+            setMessage(data.message);
+            console.log('Payload sent successfully:', payload);
+          })
+          .catch(error => {
+            console.error('Error sending payload:', error);
+          });
+      })
+      .catch(validationError => {
+        // If validation fails, show custom alert for email validation error
+        if (validationError.inner.some(err => err.path === 'email')) {
+          alert(validationError.inner.find(err => err.path === 'email').message); // Display the validation error message for email
+        } else {
+          alert('Validation error: ' + validationError.message); // Display a generic validation error message
+        }
+      });
   }
-})
-.then(data => {
-  // Handle successful response data
-  setMessage(data.message);
-  console.log('Payload sent successfully:', payload);
-  reset()
-})
-.catch(error => {
-  // Handle fetch errors
-  console.error('Error sending payload:', error);
-});
-
-  }  
+  
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
