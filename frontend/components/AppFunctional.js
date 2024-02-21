@@ -82,7 +82,7 @@ export default function AppFunctional(props) {
         const payload = { x, y, steps, email };
     const code = (((x + 1) * (y + 2)) * (steps + 1)) + email.length
   if (email === 'foo@bar.baz') {
-    setMessage(`foo@bar.baz failure ${code}`)
+    setMessage(`foo@bar.baz failure #${code}`)
   }
     schema.validate({ email })
       .then(() => {
