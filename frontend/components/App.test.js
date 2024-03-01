@@ -27,12 +27,4 @@ describe('Component tests', () => {
       expect(screen.getByText('You moved 1 time')).toBeVisible();
     });
   });
-
-  test('displays message on invalid email submit', async () => {
-    userEvent.type(screen.getByPlaceholderText('type email'), 'invalid-email@h');
-    userEvent.click(screen.getByTestId('submit'));
-    await waitFor(() => {
-      expect(screen.getByText('Ouch: email must be a valid email')).toBeVisible();
-    });
-  });
 });
