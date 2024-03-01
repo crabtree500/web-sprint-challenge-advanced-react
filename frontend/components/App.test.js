@@ -2,6 +2,8 @@ import React from 'react';
 import { render, screen, waitFor, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AppFunctional from './AppFunctional';
+import '@testing-library/jest-dom/extend-expect';
+
 
 describe('Component tests', () => {
   beforeEach(() => {
