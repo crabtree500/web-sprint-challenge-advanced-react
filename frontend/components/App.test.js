@@ -30,7 +30,7 @@ describe('Component tests', () => {
 
   test('displays message on invalid email submit', async () => {
     userEvent.type(screen.getByPlaceholderText('type email'), 'invalid-email@h');
-    userEvent.click(screen.getByText('Submit'));
+    userEvent.click(screen.getByTestId('submit'));
     await waitFor(() => {
       expect(screen.getByText('Ouch: email must be a valid email')).toBeVisible();
     });
