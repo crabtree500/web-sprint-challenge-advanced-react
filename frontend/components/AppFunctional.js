@@ -119,7 +119,7 @@ export default function AppFunctional(props) {
         if (validationError.inner.some(err => err.path === 'email')) {
           setMessage(validationError.inner.find(err => err.path === 'email').message); // Display the validation error message for email
         } else {
-          setMessage(validationError.message); // Display a generic validation error message
+          setMessage(validationError.message);
         }
       });
   }
